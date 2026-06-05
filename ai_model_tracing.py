@@ -127,9 +127,16 @@ class FetchResult:
 class ModelRow:
     provider: str
     model: str
+    official_url: str
     openness: str
     multimodal: str
     features: str
+    cli_agent_support: str
+    plugin_support: str
+    web_app: str
+    model_card: str
+    release_notes: str
+    license_terms: str
     subscription_price: str
     api_price: str
     discount: str
@@ -233,6 +240,48 @@ def markdown_escape(value: str) -> str:
     return value.replace("|", "\\|").replace("\n", " ")
 
 
+def format_links(urls: Iterable[str], label: str = "链接") -> str:
+    clean_urls = unique(urls)
+    if not clean_urls:
+        return "未配置"
+    return "<br>".join(f"[{label}{i + 1}]({url})" for i, url in enumerate(clean_urls))
+
+
+def pick_note(model: dict[str, Any], provider: dict[str, Any], key: str, fallback: str = "未确认") -> str:
+    return model.get(key) or provider.get(key) or fallback
+
+
+def pick_web_app(model: dict[str, Any], provider: dict[str, Any]) -> str:
+    return (
+        model.get("web_app")
+        or provider.get("web_app")
+        or model.get("official_url")
+        or provider.get("official_url")
+        or "未配置"
+    )
+
+
+def collect_urls(provider: dict[str, Any], model: dict[str, Any]) -> list[str]:
+    urls: list[str] = []
+    for key in (
+        "sources",
+        "pricing_sources",
+        "model_card_sources",
+        "release_note_sources",
+        "license_sources",
+        "cli_agent_sources",
+        "plugin_sources",
+    ):
+        urls.extend(provider.get(key, []))
+        urls.extend(model.get(key, []))
+    for key in ("official_url", "web_app", "weights_url"):
+        for owner in (provider, model):
+            value = owner.get(key)
+            if value and value.startswith(("http://", "https://")):
+                urls.append(value)
+    return unique(urls)
+
+
 def discover_with_serpapi(query: str, max_results: int) -> list[str]:
     key = os.getenv("SERPAPI_KEY")
     if not key:
@@ -288,11 +337,9 @@ def build_rows(config: dict[str, Any], *, no_fetch: bool, discover: bool, max_di
     rows: list[ModelRow] = []
     for provider in config["providers"]:
         provider_name = provider["name"]
-        provider_sources = provider.get("sources", [])
-        pricing_sources = provider.get("pricing_sources", [])
         for model in provider.get("models", []):
             model_name = model["name"]
-            urls = list(provider_sources) + list(pricing_sources) + model.get("sources", [])
+            urls = collect_urls(provider, model)
             if discover:
                 query = f"{provider_name} {model_name} pricing subscription open source multimodal"
                 urls.extend(discover_urls(query, max_discovered))
@@ -326,9 +373,19 @@ def build_rows(config: dict[str, Any], *, no_fetch: bool, discover: bool, max_di
                 ModelRow(
                     provider=provider_name,
                     model=model_name,
+                    official_url=pick_note(model, provider, "official_url", "未配置"),
                     openness=infer_openness(model.get("openness", ""), combined_text),
                     multimodal=infer_multimodal(model.get("multimodal", ""), combined_text),
                     features=features or "待补充",
+                    cli_agent_support=pick_note(model, provider, "cli_agent_support"),
+                    plugin_support=pick_note(model, provider, "plugin_support"),
+                    web_app=pick_web_app(model, provider),
+                    model_card=format_links(model.get("model_card_sources", provider.get("model_card_sources", [])), "Model Card"),
+                    release_notes=format_links(
+                        model.get("release_note_sources", provider.get("release_note_sources", [])),
+                        "Release",
+                    ),
+                    license_terms=build_license_terms(provider, model),
                     subscription_price=subscription_price,
                     api_price=price_text,
                     discount=detect_discount(combined_text) if combined_text else model.get("discount_note", "未联网核验"),
@@ -337,6 +394,20 @@ def build_rows(config: dict[str, Any], *, no_fetch: bool, discover: bool, max_di
                 )
             )
     return rows
+
+
+def build_license_terms(provider: dict[str, Any], model: dict[str, Any]) -> str:
+    parts = []
+    license_note = pick_note(model, provider, "license_note", "")
+    weights_url = pick_note(model, provider, "weights_url", "")
+    commercial_use = pick_note(model, provider, "commercial_use_note", "")
+    if license_note:
+        parts.append(license_note)
+    if weights_url:
+        parts.append(f"[权重/仓库]({weights_url})")
+    if commercial_use:
+        parts.append(f"商用限制：{commercial_use}")
+    return "<br>".join(parts) if parts else "未确认"
 
 
 def summarize_fetches(fetches: list[FetchResult]) -> str:
@@ -359,8 +430,8 @@ def render_report(rows: list[ModelRow], config: dict[str, Any]) -> str:
         "",
         "## 汇总表",
         "",
-        "| 厂商 | 模型/系列 | 开源状态 | 多模态 | 特点 | 订阅价格 | API/调用价格 | 优惠 | 抓取状态 | 来源 |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| 厂商 | 模型/系列 | 官方地址 | CLI/Agent | 插件/工具 | Web 端 | 开源状态 | 许可证/权重/商用 | 多模态 | 特点 | Model Card | Release Note | 订阅价格 | API/调用价格 | 优惠 | 抓取状态 | 来源 |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for row in rows:
         sources = "<br>".join(f"[来源{i + 1}]({url})" for i, url in enumerate(row.sources[:8]))
@@ -371,9 +442,16 @@ def render_report(rows: list[ModelRow], config: dict[str, Any]) -> str:
                 for value in [
                     row.provider,
                     row.model,
+                    row.official_url,
+                    row.cli_agent_support,
+                    row.plugin_support,
+                    row.web_app,
                     row.openness,
+                    row.license_terms,
                     row.multimodal,
                     row.features,
+                    row.model_card,
+                    row.release_notes,
                     row.subscription_price,
                     row.api_price,
                     row.discount,
