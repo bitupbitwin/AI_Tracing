@@ -1,0 +1,301 @@
+{
+  "providers": [
+    {
+      "name": "OpenAI",
+      "sources": [
+        "https://openai.com/api/pricing/",
+        "https://platform.openai.com/docs/models"
+      ],
+      "pricing_sources": [
+        "https://openai.com/chatgpt/pricing/"
+      ],
+      "models": [
+        {
+          "name": "GPT / o-series",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "通用推理、代码、文本、图像和语音等能力；以官方模型页为准。",
+          "api_price_note": "见 OpenAI API pricing",
+          "subscription_price_note": "见 ChatGPT pricing"
+        }
+      ]
+    },
+    {
+      "name": "Anthropic",
+      "sources": [
+        "https://www.anthropic.com/claude",
+        "https://docs.anthropic.com/en/docs/about-claude/models"
+      ],
+      "pricing_sources": [
+        "https://www.anthropic.com/pricing",
+        "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      ],
+      "models": [
+        {
+          "name": "Claude",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "强调长上下文、复杂推理、代码和企业安全能力。",
+          "api_price_note": "见 Anthropic pricing",
+          "subscription_price_note": "见 Claude plans"
+        }
+      ]
+    },
+    {
+      "name": "Google",
+      "sources": [
+        "https://ai.google.dev/gemini-api/docs/models",
+        "https://deepmind.google/models/gemini/"
+      ],
+      "pricing_sources": [
+        "https://ai.google.dev/gemini-api/docs/pricing",
+        "https://one.google.com/about/google-ai-plans/"
+      ],
+      "models": [
+        {
+          "name": "Gemini",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "原生多模态，覆盖文本、图像、音频、视频和长上下文场景。",
+          "api_price_note": "见 Gemini API pricing",
+          "subscription_price_note": "见 Google AI plans"
+        }
+      ]
+    },
+    {
+      "name": "Meta",
+      "sources": [
+        "https://www.llama.com/models/",
+        "https://github.com/meta-llama"
+      ],
+      "pricing_sources": [
+        "https://www.llama.com/llama-downloads/"
+      ],
+      "models": [
+        {
+          "name": "Llama",
+          "openness": "开放权重/需复核许可证",
+          "multimodal": "部分型号支持",
+          "features": "开放权重生态，常用于私有化部署和二次微调。",
+          "api_price_note": "模型权重通常不按 API 收费，托管平台另计",
+          "subscription_price_note": "无统一官方订阅价"
+        }
+      ]
+    },
+    {
+      "name": "Mistral AI",
+      "sources": [
+        "https://mistral.ai/technology/",
+        "https://docs.mistral.ai/getting-started/models/"
+      ],
+      "pricing_sources": [
+        "https://docs.mistral.ai/platform/pricing/"
+      ],
+      "models": [
+        {
+          "name": "Mistral / Mixtral / Magistral",
+          "openness": "开源与闭源并存",
+          "multimodal": "部分型号支持",
+          "features": "欧洲 AI 厂商，覆盖开放模型、企业模型和推理模型。",
+          "api_price_note": "见 Mistral platform pricing",
+          "subscription_price_note": "以官方产品页为准"
+        }
+      ]
+    },
+    {
+      "name": "xAI",
+      "sources": [
+        "https://docs.x.ai/docs/models"
+      ],
+      "pricing_sources": [
+        "https://docs.x.ai/docs/pricing",
+        "https://x.ai/grok"
+      ],
+      "models": [
+        {
+          "name": "Grok",
+          "openness": "闭源为主，部分旧模型开放权重需复核",
+          "multimodal": "部分型号支持",
+          "features": "强调实时信息、推理和 X 生态接入。",
+          "api_price_note": "见 xAI API pricing",
+          "subscription_price_note": "见 Grok/X subscription 页面"
+        }
+      ]
+    },
+    {
+      "name": "DeepSeek",
+      "sources": [
+        "https://api-docs.deepseek.com/",
+        "https://github.com/deepseek-ai"
+      ],
+      "pricing_sources": [
+        "https://api-docs.deepseek.com/quick_start/pricing"
+      ],
+      "models": [
+        {
+          "name": "DeepSeek",
+          "openness": "开源与闭源服务并存",
+          "multimodal": "以官方模型页为准",
+          "features": "强调高性价比推理、代码和通用对话能力。",
+          "api_price_note": "见 DeepSeek API pricing",
+          "subscription_price_note": "以官方应用/平台为准"
+        }
+      ]
+    },
+    {
+      "name": "Alibaba Cloud",
+      "sources": [
+        "https://qwenlm.github.io/",
+        "https://github.com/QwenLM"
+      ],
+      "pricing_sources": [
+        "https://help.aliyun.com/zh/model-studio/billing-for-dashscope"
+      ],
+      "models": [
+        {
+          "name": "Qwen / 通义千问",
+          "openness": "开源与闭源服务并存",
+          "multimodal": "部分型号支持",
+          "features": "覆盖文本、代码、视觉、音频、多模态和 Agent 场景。",
+          "api_price_note": "见阿里云百炼/DashScope 计费文档",
+          "subscription_price_note": "以通义/阿里云官方页面为准"
+        }
+      ]
+    },
+    {
+      "name": "Moonshot AI",
+      "sources": [
+        "https://platform.moonshot.cn/docs/"
+      ],
+      "pricing_sources": [
+        "https://platform.moonshot.cn/docs/pricing/chat"
+      ],
+      "models": [
+        {
+          "name": "Kimi / Moonshot",
+          "openness": "闭源",
+          "multimodal": "部分型号支持",
+          "features": "强调长上下文、中文体验和办公阅读场景。",
+          "api_price_note": "见 Moonshot platform pricing",
+          "subscription_price_note": "以 Kimi 官方页面为准"
+        }
+      ]
+    },
+    {
+      "name": "Zhipu AI",
+      "sources": [
+        "https://open.bigmodel.cn/dev/api/normal-model/glm-4"
+      ],
+      "pricing_sources": [
+        "https://open.bigmodel.cn/pricing"
+      ],
+      "models": [
+        {
+          "name": "GLM / 智谱清言",
+          "openness": "开源与闭源服务并存",
+          "multimodal": "部分型号支持",
+          "features": "覆盖通用对话、代码、视觉、视频理解等场景。",
+          "api_price_note": "见 BigModel pricing",
+          "subscription_price_note": "以智谱官方页面为准"
+        }
+      ]
+    },
+    {
+      "name": "Baidu",
+      "sources": [
+        "https://cloud.baidu.com/product/wenxinworkshop",
+        "https://yiyan.baidu.com/"
+      ],
+      "pricing_sources": [
+        "https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Ilkkrb0i5"
+      ],
+      "models": [
+        {
+          "name": "ERNIE / 文心",
+          "openness": "闭源为主",
+          "multimodal": "部分型号支持",
+          "features": "百度生态模型，覆盖搜索、办公、企业智能体和多模态场景。",
+          "api_price_note": "见百度智能云千帆计费文档",
+          "subscription_price_note": "以文心一言/百度官方页面为准"
+        }
+      ]
+    },
+    {
+      "name": "ByteDance",
+      "sources": [
+        "https://www.volcengine.com/product/doubao"
+      ],
+      "pricing_sources": [
+        "https://www.volcengine.com/pricing?product=doubao"
+      ],
+      "models": [
+        {
+          "name": "Doubao / 豆包",
+          "openness": "闭源",
+          "multimodal": "部分型号支持",
+          "features": "覆盖文本、视觉、语音、视频和企业智能应用。",
+          "api_price_note": "见火山引擎豆包计费页面",
+          "subscription_price_note": "以豆包官方页面为准"
+        }
+      ]
+    },
+    {
+      "name": "Tencent Cloud",
+      "sources": [
+        "https://cloud.tencent.com/product/hunyuan"
+      ],
+      "pricing_sources": [
+        "https://cloud.tencent.com/product/hunyuan/pricing"
+      ],
+      "models": [
+        {
+          "name": "Hunyuan / 混元",
+          "openness": "开源与闭源服务并存",
+          "multimodal": "部分型号支持",
+          "features": "覆盖文本、图像、视频、3D 和企业应用场景。",
+          "api_price_note": "见腾讯云混元计费页面",
+          "subscription_price_note": "以腾讯元宝/腾讯云官方页面为准"
+        }
+      ]
+    },
+    {
+      "name": "MiniMax",
+      "sources": [
+        "https://www.minimax.io/platform",
+        "https://platform.minimaxi.com/document"
+      ],
+      "pricing_sources": [
+        "https://platform.minimaxi.com/document/Price"
+      ],
+      "models": [
+        {
+          "name": "MiniMax / abab / Talkie",
+          "openness": "闭源",
+          "multimodal": "部分型号支持",
+          "features": "覆盖文本、语音、视频和角色对话等产品形态。",
+          "api_price_note": "见 MiniMax platform pricing",
+          "subscription_price_note": "以 MiniMax 官方页面为准"
+        }
+      ]
+    },
+    {
+      "name": "Cohere",
+      "sources": [
+        "https://docs.cohere.com/docs/models"
+      ],
+      "pricing_sources": [
+        "https://cohere.com/pricing"
+      ],
+      "models": [
+        {
+          "name": "Command / Embed / Rerank",
+          "openness": "闭源",
+          "multimodal": "以官方模型页为准",
+          "features": "面向企业检索增强、嵌入、重排和生成式 AI 工作流。",
+          "api_price_note": "见 Cohere pricing",
+          "subscription_price_note": "以 Cohere pricing 为准"
+        }
+      ]
+    }
+  ]
+}
