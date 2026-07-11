@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 大模型能力与信息全景控制台</title>
+  <style>
+    :root {
+      --bg-primary: #080c14;
+      --bg-secondary: #0e1320;
+      --bg-tertiary: #1b2234;
+      --accent: #2563eb;
+      --accent-glow: rgba(37, 99, 235, 0.4);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(37, 99, 235, 0.4);
+      --card-bg: rgba(14, 19, 32, 0.7);
+      --green: #10b981;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 10% 20%, #151d30 0%, #080c14 90%);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    .hero {
+      padding: 60px 20px 40px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(14,19,32,0.8) 0%, rgba(8,12,20,0.9) 100%);
+    }
+    .wrap { max-width: 1400px; margin: auto; }
+    .hero h1 { font-size: clamp(28px, 4vw, 46px); margin: 0 0 12px; letter-spacing: -1px; background: linear-gradient(90deg, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { margin: 0 0 24px; color: var(--text-secondary); font-size: 16px; max-width: 800px; }
+    .stats-row { display: flex; flex-wrap: wrap; gap: 20px; }
+    .stat-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px 24px; min-width: 180px; box-shadow: var(--shadow);
+    }
+    .stat-card .label { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card .val { font-size: 28px; font-weight: 800; margin-top: 4px; color: #60a5fa; }
+    
+    .nav-tabs {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8, 12, 20, 0.9); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-tabs-inner {
+      max-width: 1400px; margin: auto; padding: 12px 20px;
+      display: flex; gap: 12px; overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent; border: 1px solid transparent; color: var(--text-secondary);
+      padding: 10px 20px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .tab-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+    .tab-btn.active {
+      color: var(--text-primary); background: var(--bg-tertiary);
+      border-color: var(--border-active); box-shadow: 0 0 15px var(--accent-glow);
+    }
+    
+    .view-controls {
+      margin: 30px 0 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: center;
+    }
+    .region-tabs { display: flex; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 12px; border: 1px solid var(--border); }
+    .region-btn {
+      background: transparent; border: none; color: var(--text-secondary); padding: 8px 20px; border-radius: 8px;
+      font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .region-btn.active { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+    
+    .filter-group { display: flex; gap: 8px; overflow-x: auto; }
+    .filter-btn {
+      background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-secondary);
+      padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active { color: var(--text-primary); border-color: var(--border-active); background: rgba(37,99,235,0.1); }
+
+    main { padding: 20px 20px 80px; }
+    .section-view { display: none; }
+    .section-view.active { display: block; }
+    
+    .grid-ranks { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden; transition: all 0.3s;
+    }
+    .card:hover { border-color: var(--border-active); transform: translateY(-3px); }
+    .cardhead { padding: 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01); }
+    .cardhead h3 { margin: 0; font-size: 18px; color: #60a5fa; }
+    .cardbody { padding: 20px; }
+    .ranklist { display: flex; flex-direction: column; gap: 12px; }
+    .item {
+      display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center;
+      padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px;
+      background: rgba(255,255,255,0.02); transition: background 0.2s;
+    }
+    .item:hover { background: rgba(255,255,255,0.04); }
+    .rank {
+      width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center;
+      font-weight: 800; background: var(--bg-tertiary); color: var(--text-secondary);
+    }
+    .rank.r1 { background: #fef08a; color: #854d0e; }
+    .rank.r2 { background: #e2e8f0; color: #334155; }
+    .rank.r3 { background: #ffedd5; color: #9a3412; }
+    .name { font-weight: 700; color: var(--text-primary); }
+    .desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .tag {
+      font-size: 11px; padding: 4px 8px; border-radius: 99px;
+      background: rgba(16, 185, 129, 0.15); color: var(--green); white-space: nowrap;
+    }
+    .tag.none { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+    .tag.mid { background: rgba(245, 158, 11, 0.15); color: var(--orange); }
+
+    .grid-companies { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .company-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 20px; box-shadow: var(--shadow); transition: all 0.3s;
+    }
+    .company-card:hover { border-color: var(--border-active); }
+    .company-card h3 { margin: 0 0 6px; font-size: 20px; color: var(--text-primary); }
+    .company-sub { font-size: 13px; color: var(--text-muted); min-height: 38px; margin-bottom: 12px; }
+    .mrow { display: grid; grid-template-columns: 50px 1fr 24px; gap: 8px; align-items: center; margin: 8px 0; font-size: 13px; }
+    .meter { height: 6px; background: rgba(255,255,255,0.05); border-radius: 99px; overflow: hidden; }
+    .meter span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 99px; }
+    .mrow b { text-align: right; color: var(--text-primary); }
+
+    details {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+      margin-bottom: 12px; box-shadow: var(--shadow); overflow: hidden;
+    }
+    summary { cursor: pointer; padding: 16px 20px; font-weight: 700; color: var(--text-primary); outline: none; }
+    summary:hover { background: rgba(255,255,255,0.02); }
+    .inside { padding: 0 20px 20px; color: var(--text-secondary); border-top: 1px solid rgba(255,255,255,0.02); padding-top: 15px; }
+
+    .search-box {
+      position: relative; margin-bottom: 20px; display: flex; gap: 10px; max-width: 500px;
+    }
+    .search-input {
+      flex: 1; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--bg-tertiary); color: var(--text-primary); font-size: 14px; transition: all 0.2s;
+    }
+    .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+    .results-count {
+      align-self: center; font-size: 13px; color: var(--text-muted);
+    }
+
+    .table-container {
+      width: 100%; overflow-x: auto; background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 30px;
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th, td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { background: rgba(255,255,255,0.02); color: var(--text-secondary); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
+    tr:hover td { background: rgba(255,255,255,0.01); }
+    tr:last-child td { border-bottom: none; }
+    .badge-region { padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 11px; white-space: nowrap; }
+    .badge-region.domestic { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .badge-region.foreign { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+    .badge-status { color: var(--text-secondary); font-size: 12px; }
+    .price-highlight { font-weight: 600; color: #34d399; }
+    .btn-link { color: #60a5fa; text-decoration: none; font-weight: 600; transition: color 0.2s; }
+    .btn-link:hover { color: var(--text-primary); text-decoration: underline; }
+    
+    .footer { text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 60px; padding: 20px 0; border-top: 1px solid var(--border); }
+    .hidden { display: none !important; }
+    
+    @media(max-width: 900px) {
+      .view-controls { flex-direction: column; align-items: stretch; }
+      .grid-ranks, .grid-companies { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="wrap">
+      <h1>AI 大模型能力与信息全景控制台</h1>
+      <p>自动聚合官方数据源与实时搜寻结果，提供国内外主流 AI 大模型与厂商生态的多维度评测与实时信息数据库。</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="label">追踪模型总数</div>
+          <div class="val">33</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">覆盖厂商总数</div>
+          <div class="val">33</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">最后更新时间</div>
+          <div class="val" style="font-size:16px; margin-top:14px; font-weight:600; color:#34d399;">2026-07-11 11:36 UTC</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-tabs">
+    <div class="nav-tabs-inner">
+      <button class="tab-btn active" onclick="switchTab('leaderboard')">📊 能力排行榜与生态</button>
+      <button class="tab-btn" onclick="switchTab('database')">💾 模型详细信息数据库</button>
+      <button class="tab-btn" onclick="switchTab('guide')">💡 场景化选型建议</button>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    
+    <!-- Tab 1: Leaderboards -->
+    <div id="tab-leaderboard" class="section-view active">
+      <div class="view-controls">
+        <div class="region-tabs">
+          <button class="region-btn active" onclick="switchRegion('domestic')">国内大模型</button>
+          <button class="region-btn" onclick="switchRegion('foreign')">国外大模型</button>
+        </div>
+        <div class="filter-group">
+          <button class="filter-btn active" onclick="filterRankCards('all', this)">全部榜单</button>
+          <button class="filter-btn" onclick="filterRankCards('coding', this)">编程榜</button>
+          <button class="filter-btn" onclick="filterRankCards('image', this)">图片榜</button>
+          <button class="filter-btn" onclick="filterRankCards('video', this)">视频榜</button>
+          <button class="filter-btn" onclick="filterRankCards('text', this)">文本表达榜</button>
+        </div>
+      </div>
+      
+      <!-- Domestic Leaderboard Container -->
+      <div id="leaderboard-domestic" class="region-container">
+        <h2>国内四大能力榜单</h2>
+        <div class="grid-ranks">
+          
+            <article class="card category-card coding">
+                <div class="cardhead"><h3>编程能力</h3></div>
+                <div class="cardbody"><div class="ranklist">
+            
+                <div class="item">
+                    <span class="rank r1">1</span>
+                    <div>
+                        <div class="name">GLM</div>
+                        <div class="desc">Agent 编程、大型工程、多文件任务强</div>
+                    </div>
+                    <span class="tag">工程型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r2">2</span>
+                    <div>
+                        <div class="name">DeepSeek</div>
+                        <div class="desc">算法、推理、代码正确率与性价比突出</div>
+                    </div>
+                    <span class="tag">推理型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r3">3</span>
+                    <div>
+                        <div class="name">MiniMax</div>
+                        <div class="desc">长上下文、多文件与自主编程能力强</div>
+                    </div>
+                    <span class="tag">全能型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">4</span>
+                    <div>
+                        <div class="name">Kimi</div>
+                        <div class="desc">长项目阅读、日志分析、CLI 体验好</div>
+                    </div>
+                    <span class="tag">长上下文</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">5</span>
+                    <div>
+                        <div class="name">Qwen</div>
+                        <div class="desc">模型、API、CLI、开源生态最均衡</div>
+                    </div>
+                    <span class="tag">生态型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">6</span>
+                    <div>
+                        <div class="name">MiMo</div>
+                        <div class="desc">新兴编程模型，终端与设备生态值得观察</div>
+                    </div>
+                    <span class="tag">潜力型</span>
+                </div>
+                </div></div></article>
+            <article class="card category-card image">
+                <div class="cardhead"><h3>图片生成</h3></div>
+                <div class="cardbody"><div class="ranklist">
+            
+                <div class="item">
+                    <span class="rank r1">1</span>
+                    <div>
+                        <div class="name">Seedream</div>
+                        <div class="desc">商业视觉、中文海报、多图参考、图片编辑</div>
+                    </div>
+                    <span class="tag">字节</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r2">2</span>
+                    <div>
+                        <div class="name">Qwen-Image</div>
+                        <div class="desc">中英文文字、结构化设计与指令遵循强</div>
+                    </div>
+                    <span class="tag">阿里</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r3">3</span>
+                    <div>
+                        <div class="name">Wan Image</div>
+                        <div class="desc">高保真、人物商品一致性、图像编辑</div>
+                    </div>
+                    <span class="tag">阿里</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">4</span>
+                    <div>
+                        <div class="name">混元 Image</div>
+                        <div class="desc">中文语义、写实、中国文化元素</div>
+                    </div>
+                    <span class="tag">腾讯</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">5</span>
+                    <div>
+                        <div class="name">可灵 Image</div>
+                        <div class="desc">电影感画面、角色连续创作、分镜</div>
+                    </div>
+                    <span class="tag">快手</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">—</span>
+                    <div>
+                        <div class="name">Kimi / MiMo / DeepSeek</div>
+                        <div class="desc">核心模型暂不以原生图片生成为主要能力</div>
+                    </div>
+                    <span class="tag">无主流原生能力</span>
+                </div>
+                </div></div></article>
+            <article class="card category-card video">
+                <div class="cardhead"><h3>视频生成</h3></div>
+                <div class="cardbody"><div class="ranklist">
+            
+                <div class="item">
+                    <span class="rank r1">1</span>
+                    <div>
+                        <div class="name">Seedance</div>
+                        <div class="desc">音视频联合、多镜头叙事、复杂动作</div>
+                    </div>
+                    <span class="tag">字节</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r2">2</span>
+                    <div>
+                        <div class="name">可灵 Video</div>
+                        <div class="desc">写实、运镜、角色一致性与产品成熟度高</div>
+                    </div>
+                    <span class="tag">快手</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r3">3</span>
+                    <div>
+                        <div class="name">Wan Video</div>
+                        <div class="desc">可控性、开发者生态、图像视频联动</div>
+                    </div>
+                    <span class="tag">阿里</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">4</span>
+                    <div>
+                        <div class="name">海螺 / MiniMax</div>
+                        <div class="desc">人物表现、创意视频、动作和镜头运动</div>
+                    </div>
+                    <span class="tag">MiniMax</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">5</span>
+                    <div>
+                        <div class="name">Vidu</div>
+                        <div class="desc">首尾帧、主体一致性、动漫与特效</div>
+                    </div>
+                    <span class="tag">生数科技</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">—</span>
+                    <div>
+                        <div class="name">GLM / Kimi / MiMo / DeepSeek</div>
+                        <div class="desc">核心模型暂不以原生视频生成为主要能力</div>
+                    </div>
+                    <span class="tag">无主流原生能力</span>
+                </div>
+                </div></div></article>
+            <article class="card category-card text">
+                <div class="cardhead"><h3>文本整合与表达</h3></div>
+                <div class="cardbody"><div class="ranklist">
+            
+                <div class="item">
+                    <span class="rank r1">1</span>
+                    <div>
+                        <div class="name">Kimi</div>
+                        <div class="desc">口述整理、长文本、观点稿和脚本自然</div>
+                    </div>
+                    <span class="tag">最懂表达</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r2">2</span>
+                    <div>
+                        <div class="name">Qwen</div>
+                        <div class="desc">中文综合写作均衡，结构稳定</div>
+                    </div>
+                    <span class="tag">最均衡</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r3">3</span>
+                    <div>
+                        <div class="name">MiniMax</div>
+                        <div class="desc">故事、角色、情绪、对白和短剧脚本</div>
+                    </div>
+                    <span class="tag">创作型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">4</span>
+                    <div>
+                        <div class="name">豆包</div>
+                        <div class="desc">短视频、小红书、生活化与口语表达</div>
+                    </div>
+                    <span class="tag">接地气</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">5</span>
+                    <div>
+                        <div class="name">GLM</div>
+                        <div class="desc">商业报告、技术分析和逻辑表达强</div>
+                    </div>
+                    <span class="tag">专业型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">6</span>
+                    <div>
+                        <div class="name">DeepSeek</div>
+                        <div class="desc">观点拆解、深度分析强，文风相对偏硬</div>
+                    </div>
+                    <span class="tag">分析型</span>
+                </div>
+                </div></div></article>
+        </div>
+        <h2>国内公司大模型生态评分</h2>
+        <div class="grid-companies">
+          
+            <div class="company-card">
+                <h3>字节跳动</h3>
+                <div class="company-sub">豆包 / Seedream / Seedance / 即梦</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:70%"></span></div><b>7</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>阿里巴巴</h3>
+                <div class="company-sub">Qwen / Qwen-Image / Wan / Model Studio</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>MiniMax</h3>
+                <div class="company-sub">文本 / 代码 / 海螺视频 / 语音 / 音乐</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:70%"></span></div><b>7</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>智谱 AI</h3>
+                <div class="company-sub">GLM / Coding Plan / Agent / 企业服务</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:60%"></span></div><b>6</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:30%"></span></div><b>3</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>月之暗面</h3>
+                <div class="company-sub">Kimi / Kimi Code / 长上下文</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:20%"></span></div><b>2</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:20%"></span></div><b>2</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>DeepSeek</h3>
+                <div class="company-sub">推理 / 代码 / 开放模型 / 高性价比</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:10%"></span></div><b>1</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:10%"></span></div><b>1</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+            </div>
+            
+        </div>
+      </div>
+
+      <!-- Foreign Leaderboard Container -->
+      <div id="leaderboard-foreign" class="region-container hidden">
+        <h2>国外四大能力榜单</h2>
+        <div class="grid-ranks">
+          
+            <article class="card category-card coding">
+                <div class="cardhead"><h3>编程能力</h3></div>
+                <div class="cardbody"><div class="ranklist">
+            
+                <div class="item">
+                    <span class="rank r1">1</span>
+                    <div>
+                        <div class="name">OpenAI GPT-5.6 / Codex</div>
+                        <div class="desc">代码基准、终端任务、复杂实现和工具调用综合领先</div>
+                    </div>
+                    <span class="tag">综合第一</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r2">2</span>
+                    <div>
+                        <div class="name">Anthropic Claude Fable 5 / Opus</div>
+                        <div class="desc">大型仓库理解、规划、代码审查和工程质量突出</div>
+                    </div>
+                    <span class="tag">工程标杆</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r3">3</span>
+                    <div>
+                        <div class="name">Google Gemini 3.5</div>
+                        <div class="desc">超长上下文、多模态理解、Google Cloud 与 CLI 生态强</div>
+                    </div>
+                    <span class="tag">长上下文</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">4</span>
+                    <div>
+                        <div class="name">xAI Grok 4.5 / Grok Build</div>
+                        <div class="desc">面向代码与 Agent 任务优化，速度和性价比较强</div>
+                    </div>
+                    <span class="tag">Agent 型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">5</span>
+                    <div>
+                        <div class="name">NVIDIA Nemotron 3 Ultra</div>
+                        <div class="desc">开放生态、企业部署和代码代理表现突出</div>
+                    </div>
+                    <span class="tag">开放部署</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">6</span>
+                    <div>
+                        <div class="name">Mistral / Devstral</div>
+                        <div class="desc">欧洲代表性代码模型，私有部署和企业使用方便</div>
+                    </div>
+                    <span class="tag">企业型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">7</span>
+                    <div>
+                        <div class="name">Meta Llama / Muse</div>
+                        <div class="desc">开源生态广，效果高度依赖模型版本和 Agent 框架</div>
+                    </div>
+                    <span class="tag">开源生态</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">8</span>
+                    <div>
+                        <div class="name">Amazon Nova</div>
+                        <div class="desc">AWS 集成和企业工作流有优势，纯编程上限略低</div>
+                    </div>
+                    <span class="tag">云生态</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">9</span>
+                    <div>
+                        <div class="name">Cohere Command</div>
+                        <div class="desc">企业检索、RAG 和工具调用较强，代码不是首要定位</div>
+                    </div>
+                    <span class="tag">RAG 型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">10</span>
+                    <div>
+                        <div class="name">Microsoft Phi</div>
+                        <div class="desc">小模型和端侧部署突出，不适合与旗舰云模型硬拼上限</div>
+                    </div>
+                    <span class="tag">端侧型</span>
+                </div>
+                </div></div></article>
+            <article class="card category-card image">
+                <div class="cardhead"><h3>图片生成</h3></div>
+                <div class="cardbody"><div class="ranklist">
+            
+                <div class="item">
+                    <span class="rank r1">1</span>
+                    <div>
+                        <div class="name">OpenAI GPT Image 2</div>
+                        <div class="desc">综合画质、指令理解、文字生成和对话式编辑领先</div>
+                    </div>
+                    <span class="tag">综合第一</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r2">2</span>
+                    <div>
+                        <div class="name">Reve 2.0</div>
+                        <div class="desc">盲测偏好很高，写实、构图和提示词还原突出</div>
+                    </div>
+                    <span class="tag">盲测强</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r3">3</span>
+                    <div>
+                        <div class="name">Microsoft MAI-Image 2.5</div>
+                        <div class="desc">高质量生成、商业场景和微软产品整合能力强</div>
+                    </div>
+                    <span class="tag">微软生态</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">4</span>
+                    <div>
+                        <div class="name">Google Nano Banana 2 / Imagen</div>
+                        <div class="desc">对话式编辑、多图参考、人物一致性和 Gemini 联动强</div>
+                    </div>
+                    <span class="tag">编辑强</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">5</span>
+                    <div>
+                        <div class="name">Midjourney</div>
+                        <div class="desc">艺术审美、电影感、概念设计和风格控制仍是标杆</div>
+                    </div>
+                    <span class="tag">审美标杆</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">6</span>
+                    <div>
+                        <div class="name">Recraft V4</div>
+                        <div class="desc">品牌视觉、矢量图、广告物料和设计工作流突出</div>
+                    </div>
+                    <span class="tag">设计型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">7</span>
+                    <div>
+                        <div class="name">Black Forest Labs FLUX.2</div>
+                        <div class="desc">开放权重生态、写实和可定制部署能力强</div>
+                    </div>
+                    <span class="tag">开放权重</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">8</span>
+                    <div>
+                        <div class="name">Ideogram 4</div>
+                        <div class="desc">图片中文字、海报、Logo 和排版能力突出</div>
+                    </div>
+                    <span class="tag">文字排版</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">9</span>
+                    <div>
+                        <div class="name">Adobe Firefly</div>
+                        <div class="desc">Photoshop、Illustrator、企业版权与设计流程优势明显</div>
+                    </div>
+                    <span class="tag">专业工作流</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">10</span>
+                    <div>
+                        <div class="name">Stability AI Stable Diffusion</div>
+                        <div class="desc">本地部署、插件、LoRA 和社区生态庞大，但基础版本画质落后于新旗舰</div>
+                    </div>
+                    <span class="tag">本地生态</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">—</span>
+                    <div>
+                        <div class="name">Claude / Mistral / Cohere</div>
+                        <div class="desc">核心旗舰模型不以原生图片生成为主要能力</div>
+                    </div>
+                    <span class="tag">无主流原生能力</span>
+                </div>
+                </div></div></article>
+            <article class="card category-card video">
+                <div class="cardhead"><h3>视频生成</h3></div>
+                <div class="cardbody"><div class="ranklist">
+            
+                <div class="item">
+                    <span class="rank r1">1</span>
+                    <div>
+                        <div class="name">Google Veo 3.1</div>
+                        <div class="desc">写实、原生音频、镜头语言和 Gemini/Flow 工作流全面</div>
+                    </div>
+                    <span class="tag">综合第一</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r2">2</span>
+                    <div>
+                        <div class="name">Runway Gen-4.5</div>
+                        <div class="desc">镜头控制、视频编辑、角色一致性和专业生产流程成熟</div>
+                    </div>
+                    <span class="tag">工作流第一</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r3">3</span>
+                    <div>
+                        <div class="name">OpenAI Sora</div>
+                        <div class="desc">场景理解、叙事、物理感和 ChatGPT 入口具有优势</div>
+                    </div>
+                    <span class="tag">叙事型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">4</span>
+                    <div>
+                        <div class="name">Luma Ray 3</div>
+                        <div class="desc">动态表现、HDR、修改与快速创意迭代突出</div>
+                    </div>
+                    <span class="tag">动态强</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">5</span>
+                    <div>
+                        <div class="name">xAI Grok Imagine Video</div>
+                        <div class="desc">生成速度、价格和 Grok 产品入口较有竞争力</div>
+                    </div>
+                    <span class="tag">性价比</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">6</span>
+                    <div>
+                        <div class="name">Adobe Firefly Video</div>
+                        <div class="desc">Adobe 剪辑、版权安全和企业创意流程优势明显</div>
+                    </div>
+                    <span class="tag">商业制作</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">7</span>
+                    <div>
+                        <div class="name">Lightricks LTX 2.3</div>
+                        <div class="desc">开放权重、音频视频联合和本地开发者生态突出</div>
+                    </div>
+                    <span class="tag">开放权重</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">8</span>
+                    <div>
+                        <div class="name">Pika</div>
+                        <div class="desc">短视频特效、快速编辑和社交媒体内容上手简单</div>
+                    </div>
+                    <span class="tag">娱乐型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">9</span>
+                    <div>
+                        <div class="name">Meta Movie Gen</div>
+                        <div class="desc">研究和 Meta 生态潜力大，但普通用户产品化程度有限</div>
+                    </div>
+                    <span class="tag">研究型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">—</span>
+                    <div>
+                        <div class="name">Claude / Mistral / Cohere / Nova</div>
+                        <div class="desc">核心旗舰模型暂不以原生视频生成为主要能力</div>
+                    </div>
+                    <span class="tag">无主流原生能力</span>
+                </div>
+                </div></div></article>
+            <article class="card category-card text">
+                <div class="cardhead"><h3>文本整合与表达</h3></div>
+                <div class="cardbody"><div class="ranklist">
+            
+                <div class="item">
+                    <span class="rank r1">1</span>
+                    <div>
+                        <div class="name">Anthropic Claude</div>
+                        <div class="desc">长文节奏、语言质感、改写、角色语气和低模板感最突出</div>
+                    </div>
+                    <span class="tag">表达标杆</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r2">2</span>
+                    <div>
+                        <div class="name">OpenAI GPT</div>
+                        <div class="desc">综合能力最全面，创作、分析、结构化输出和工具结合稳定</div>
+                    </div>
+                    <span class="tag">最全面</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank r3">3</span>
+                    <div>
+                        <div class="name">Google Gemini</div>
+                        <div class="desc">超长资料整合、多模态理解、研究和信息提炼突出</div>
+                    </div>
+                    <span class="tag">资料整合</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">4</span>
+                    <div>
+                        <div class="name">xAI Grok</div>
+                        <div class="desc">互联网语感、实时信息、观点表达和更直接的风格鲜明</div>
+                    </div>
+                    <span class="tag">鲜明直接</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">5</span>
+                    <div>
+                        <div class="name">Mistral</div>
+                        <div class="desc">多语言、欧洲语言、专业写作和企业部署表现均衡</div>
+                    </div>
+                    <span class="tag">多语言</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">6</span>
+                    <div>
+                        <div class="name">Meta Llama / Muse</div>
+                        <div class="desc">开源可定制，文本效果依赖微调版本和产品封装</div>
+                    </div>
+                    <span class="tag">可定制</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">7</span>
+                    <div>
+                        <div class="name">Cohere Command</div>
+                        <div class="desc">企业文档、检索增强、商务信息整合和多语言较强</div>
+                    </div>
+                    <span class="tag">企业文本</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">8</span>
+                    <div>
+                        <div class="name">Amazon Nova</div>
+                        <div class="desc">AWS 企业场景、成本和系统集成强，创作风格不是最大优势</div>
+                    </div>
+                    <span class="tag">云服务型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">9</span>
+                    <div>
+                        <div class="name">Microsoft Phi</div>
+                        <div class="desc">小型与端侧任务有效，但复杂长文本不及旗舰大模型</div>
+                    </div>
+                    <span class="tag">小模型</span>
+                </div>
+                
+                <div class="item">
+                    <span class="rank ">10</span>
+                    <div>
+                        <div class="name">Perplexity</div>
+                        <div class="desc">严格说是搜索产品而非单一基础模型，资料搜索和带来源总结实用</div>
+                    </div>
+                    <span class="tag">搜索产品</span>
+                </div>
+                </div></div></article>
+        </div>
+        <h2>国外公司大模型生态评分</h2>
+        <div class="grid-companies">
+          
+            <div class="company-card">
+                <h3>OpenAI</h3>
+                <div class="company-sub">GPT / Codex / GPT Image / Sora / ChatGPT</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>Google DeepMind</h3>
+                <div class="company-sub">Gemini / Nano Banana / Imagen / Veo / Flow</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>Anthropic</h3>
+                <div class="company-sub">Claude / Claude Code / Cowork</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:10%"></span></div><b>1</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:10%"></span></div><b>1</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:100%"></span></div><b>10</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>xAI / SpaceXAI</h3>
+                <div class="company-sub">Grok / Grok Build / Grok Imagine</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>Microsoft AI</h3>
+                <div class="company-sub">MAI / Copilot / Azure AI / Phi</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:60%"></span></div><b>6</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>Meta</h3>
+                <div class="company-sub">Llama / Muse / Movie Gen / Meta AI</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:70%"></span></div><b>7</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>Adobe</h3>
+                <div class="company-sub">Firefly / Photoshop / Premiere Pro</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:20%"></span></div><b>2</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:30%"></span></div><b>3</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>Mistral AI</h3>
+                <div class="company-sub">Le Chat / Mistral / Devstral</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:20%"></span></div><b>2</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:10%"></span></div><b>1</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+            </div>
+            
+            <div class="company-card">
+                <h3>NVIDIA</h3>
+                <div class="company-sub">Nemotron / Cosmos / NIM</div>
+                <div class="mrow"><span>编程</span><div class="meter"><span style="width:90%"></span></div><b>9</b></div>
+                <div class="mrow"><span>图片</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+                <div class="mrow"><span>视频</span><div class="meter"><span style="width:70%"></span></div><b>7</b></div>
+                <div class="mrow"><span>文本</span><div class="meter"><span style="width:80%"></span></div><b>8</b></div>
+            </div>
+            
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Database -->
+    <div id="tab-database" class="section-view">
+      <h2>所有模型详细追踪数据库</h2>
+      <p style="color:var(--text-secondary); margin-bottom:20px;">包含官方地址、开源状态、API 价格、订阅价格、多模态支持等实时更新参数。</p>
+      
+      <div class="search-box">
+        <input type="text" class="search-input" id="search-db" oninput="searchDatabase()" placeholder="输入厂商、模型名、价格、支持等关键词进行过滤...">
+        <span class="results-count" id="results-lbl">共 33 个大模型信息</span>
+      </div>
+
+      <div class="table-container">
+        <table id="db-table">
+          <thead>
+            <tr>
+              <th>厂商</th>
+              <th>模型系列</th>
+              <th>区域</th>
+              <th>官方链接</th>
+              <th>开源状态</th>
+              <th>CLI 支持</th>
+              <th>插件工具支持</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+        <tr data-region="国外">
+            <td><strong>OpenAI</strong></td>
+            <td><strong>GPT / o-series</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://chatgpt.com" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：官方 openai CLI；支持接入 VS Code GitHub Copilot、Cursor、Cline 等 Agent 编程工具</td>
+            <td>支持：ChatGPT 插件生态、Custom GPTs 以及 API function calling/tools 接口</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Anthropic</strong></td>
+            <td><strong>Claude</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://claude.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：官方 Claude Code 终端命令行编程 Agent 交互工具；广泛支持 Cursor、Cline、Roo Code 等工具</td>
+            <td>支持：Model Context Protocol (MCP) 协议扩展、Claude 智能体以及 API 工具调用接口</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Google</strong></td>
+            <td><strong>Gemini</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://gemini.google.com" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：官方 gemini-cli，以及 Google IDX、Gemini Code Assist 开发环境；可接入 Cursor、Cline 等终端</td>
+            <td>支持：Google Workspace（邮箱、文档、云端硬盘）扩展、Gemini MCP Server 及 function calling 接口</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Meta</strong></td>
+            <td><strong>Llama</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://www.llama.com" target="_blank" class="btn-link">访问</a></td>
+            <td>开放权重/需复核许可证</td>
+            <td>支持：官方 Llama CLI 及 llamafile 工具，支持接入各类开源本地 Coding Agent 框架</td>
+            <td>支持：Llama Stack 智能体开发套件、Llama Agentic System 以及 function calling 接口</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Mistral AI</strong></td>
+            <td><strong>Mistral / Mixtral / Magistral</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://chat.mistral.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源并存</td>
+            <td>支持：官方 mistral CLI 命令行客户端，支持接入主流开源 Coding Agent 平台</td>
+            <td>支持：Le Chat 插件工具箱、La Plateforme 智能体构建工具及 function calling 接口</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>xAI</strong></td>
+            <td><strong>Grok</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://grok.com" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源为主，部分旧模型开放权重需复核</td>
+            <td>支持：Grok Build 开发环境，支持 API 接入第三方终端或 Coding Agent 工具</td>
+            <td>支持：X 社交平台实时数据插件、Grok 网页搜索与代码运行工具、API tools 接口</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>深度求索</strong></td>
+            <td><strong>DeepSeek</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://chat.deepseek.com" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源服务并存</td>
+            <td>无官方独立 CLI；官方提供 API，可接入 Claude Code、Cline、OpenCode 等第三方 CLI/Agent</td>
+            <td>支持：官方 API 提供 tool/function calling（含 thinking 模式工具调用与 strict 模式）</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>阿里云</strong></td>
+            <td><strong>通义千问 / Qwen</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://chat.qwen.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源服务并存</td>
+            <td>支持：官方 Qwen Code 终端 AI coding agent（QwenLM/qwen-code，开源）</td>
+            <td>支持：Qwen Code 内置工具链、阿里云百炼/Model Studio 工具调用与 API function calling</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>月之暗面</strong></td>
+            <td><strong>Kimi</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://kimi.com" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源服务并存</td>
+            <td>支持：官方 Kimi Code CLI（MoonshotAI/kimi-code，终端 coding agent）</td>
+            <td>支持：官方 API tools（web-search、fetch、quickjs、code_runner、excel 等）及 tool calling</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>智谱AI</strong></td>
+            <td><strong>GLM</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://z.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源服务并存</td>
+            <td>支持：官方 Coding Agent 接入协议与 ZCode；可对接 Claude Code、Cursor、Cline、Roo Code、OpenCode 等终端/IDE 工具</td>
+            <td>支持：GLM Coding Plan 扩展插件（如 usage query plugin）、MCP 集成及 API 工具调用</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>百度</strong></td>
+            <td><strong>文心</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://yiyan.baidu.com" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源服务并存</td>
+            <td>支持：百度智能云千帆 SDK 提供 qianfan CLI；可通过 API 接入主流 Agent/编辑器，无独立文心 Coding CLI</td>
+            <td>支持：千帆 AppBuilder、文心一言插件生态（百度搜索、文档助手等）以及 API 工具调用</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>字节跳动</strong></td>
+            <td><strong>豆包</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://www.doubao.com" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：火山方舟官方 ark-cli（npm @volcengine/ark-cli），可对接 Claude Code、Cursor、TRAE 等</td>
+            <td>支持：扣子 Coze 智能体开发生态、火山方舟工具调用以及 API tools 接口</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>腾讯</strong></td>
+            <td><strong>混元</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://yuanbao.tencent.com" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源服务并存</td>
+            <td>部分支持：腾讯云官方 tccli 可调用混元 API；无独立混元 Coding CLI，可接入第三方 Agent/编辑器</td>
+            <td>支持：腾讯元器智能体开发平台、混元插件（搜索、计算、图表等）及 API tools 接口</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>MiniMax</strong></td>
+            <td><strong>MiniMax</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://chat.minimax.io" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源服务并存</td>
+            <td>支持：官方 mmx-cli（GitHub MiniMax-AI/cli，npm mmx-cli）</td>
+            <td>支持：OpenClaw、MCP/Agent 集成、MiniMax Agent 以及官方 CLI Skill 工具链</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Cohere</strong></td>
+            <td><strong>Command / Embed / Rerank</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://cohere.com" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：官方 cohere CLI 工具，支持检索增强（RAG）和企业级开发终端集成</td>
+            <td>支持：Cohere Toolkit 智能体套件、企业级 RAG 检索连接器生态及 function calling</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>快手</strong></td>
+            <td><strong>可灵</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://klingai.com" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>不支持官方独立 CLI；提供官方可灵 API，可作为第三方 Agent/工作流接口</td>
+            <td>支持：可灵 Web 端灵感画布、动作控制等创作工具，以及 API 视频/图像生成控参接口</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>生数科技</strong></td>
+            <td><strong>Vidu</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://www.vidu.studio" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>不支持官方独立 CLI；提供官方 Vidu API，可作为第三方 Agent/工作流接口</td>
+            <td>支持：Vidu Web 端角色/主体一致性等创意工具、API 视频生成工具链</td>
+        </tr>
+        
+        <tr data-region="国内">
+            <td><strong>小米</strong></td>
+            <td><strong>MiMo</strong></td>
+            <td><span class='badge-region domestic'>国内</span></td>
+            <td><a href="https://mimo.xiaomi.com" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源服务并存</td>
+            <td>支持：官方 MiMo Code 终端编程 Agent（npm @mimo-ai/cli，MIT 开源）</td>
+            <td>支持：MiMo Code 内置工具与持久记忆、官方 API 接入及端侧/Agent 自动化能力</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>NVIDIA</strong></td>
+            <td><strong>Nemotron / Cosmos</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://build.nvidia.com" target="_blank" class="btn-link">访问</a></td>
+            <td>开源/开放权重</td>
+            <td>支持：官方 NVIDIA NIM CLI 部署；可作为 API 接入 Cursor、Cline 等 IDE 编程 Agent</td>
+            <td>支持：TensorRT-LLM 优化插件、以及与 LangChain 等主流智能体框架的深度集成</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Amazon</strong></td>
+            <td><strong>Nova</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://aws.amazon.com/bedrock/nova/" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：官方 AWS CLI；可作为 API 接入 Bedrock IDE 插件及 Cline 等 Agent 编程框架</td>
+            <td>支持：AWS Bedrock Agents 智能体套件，集成 RAG 检索知识库与 API function calling</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Microsoft</strong></td>
+            <td><strong>Phi / MAI-Image</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://azure.microsoft.com" target="_blank" class="btn-link">访问</a></td>
+            <td>开源/闭源并存</td>
+            <td>支持：通过 Microsoft AI Shell、Ollama CLI 运行 Phi 系列；可接入 VS Code GitHub Copilot</td>
+            <td>支持：Phi 支持 ONNX Runtime 插件、Semantic Kernel 框架；MAI-Image 集成于 Copilot Designer</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Midjourney</strong></td>
+            <td><strong>Midjourney</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://www.midjourney.com" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：无官方 CLI；支持 Discord Bot/斜杠命令交互，支持接入各类第三方 Discord 智能体</td>
+            <td>支持：Discord 内置编辑工具（Vary Region、Pan、Zoom）和官方 Web 端的图像编辑器插件</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Recraft</strong></td>
+            <td><strong>Recraft V4</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://www.recraft.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：提供官方 API，无独立命令行 CLI 工具</td>
+            <td>支持：Web 端支持无限画布（Infinite Canvas）、矢量编辑工具箱和图片背景擦除/修复插件</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Black Forest Labs</strong></td>
+            <td><strong>FLUX.2</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://blackforestlabs.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源并存</td>
+            <td>支持：通过 ComfyUI、Automatic1111 命令行及 Python 脚本运行；可接入各类 AI 绘画客户端</td>
+            <td>支持：丰富的 LoRA 插件、ControlNet 插件以精准控制构图、人像和光影</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Ideogram</strong></td>
+            <td><strong>Ideogram 4</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://ideogram.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：提供官方 API，暂无官方命令行 CLI 工具</td>
+            <td>支持：Web 端支持文字排版调优工具（Magic Prompt）、图片编辑插件与画板比例调整</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Adobe</strong></td>
+            <td><strong>Firefly / Firefly Video</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://firefly.adobe.com" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：无独立 CLI 工具；可作为底层出图引擎集成于各类企业自动化流</td>
+            <td>支持：深度集成于 Photoshop（生成式填充/绘图插件）、Illustrator（生成式矢量绘图）等专业创意套件</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Stability AI</strong></td>
+            <td><strong>Stable Diffusion</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://stability.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>开源与闭源并存</td>
+            <td>支持：支持 WebUI CLI、ComfyUI 终端运行；广泛作为 API 或本地模型被各类编程/出图客户端集成</td>
+            <td>支持：全球最庞大的社区插件生态，包括 ControlNet、IP-Adapter、LoRA、以及各类精细渲染插件</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Runway</strong></td>
+            <td><strong>Runway Gen-4.5</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://runwayml.com" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：官方提供 API 控制接口，无独立命令行 CLI 编程工具</td>
+            <td>支持：Web 端提供 Runway AI Magic Tools 工具箱（如画笔控制 Motion Brush、高级相机控制、绿幕抠图等）</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Luma AI</strong></td>
+            <td><strong>Luma Ray 3 / Dream Machine</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://lumalabs.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：提供 Dream Machine API，无独立 CLI 命令行终端</td>
+            <td>支持: Web 端支持首尾帧参考、动作路径绘制工具和视频长镜头生成插件</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Lightricks</strong></td>
+            <td><strong>LTX 2.3</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://lightricks.com" target="_blank" class="btn-link">访问</a></td>
+            <td>开源/开放权重</td>
+            <td>支持：支持 Python 脚本与 ComfyUI 终端运行，可作为开源 API 接入各类视频生成客户端</td>
+            <td>支持：支持原生音画同步生成插件、以及开源社区的各类视频连续性调优工具</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Pika</strong></td>
+            <td><strong>Pika</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://pika.art" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：支持官方 Discord Bot 斜杠命令，暂无官方独立 CLI 命令行终端</td>
+            <td>支持：Web 端支持局部修改（Modify Region）、画面扩展（Expand Canvas）及 Pika 剪辑工具箱</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Perplexity</strong></td>
+            <td><strong>Perplexity</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://www.perplexity.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：提供官方 API，可接入各类终端检索客户端或命令行 Agent 作为搜索数据源</td>
+            <td>支持：支持 Perplexity Copilot 深度搜索插件、以及各类浏览器的搜索引擎整合工具</td>
+        </tr>
+        
+        <tr data-region="国外">
+            <td><strong>Reve</strong></td>
+            <td><strong>Reve 2.0</strong></td>
+            <td><span class='badge-region foreign'>国外</span></td>
+            <td><a href="https://reve.ai" target="_blank" class="btn-link">访问</a></td>
+            <td>闭源</td>
+            <td>支持：无官方 CLI，提供基础的 API 接口供第三方应用集成</td>
+            <td>支持：Web 平台提供基础图像生成与参数调节滑块工具</td>
+        </tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 3: Decision Guide -->
+    <div id="tab-guide" class="section-view">
+      <div class="view-controls" style="margin-top: 10px;">
+        <div class="region-tabs">
+          <button class="region-btn active" id="guide-reg-dom" onclick="switchGuideRegion('domestic')">国内选型建议</button>
+          <button class="region-btn" id="guide-reg-for" onclick="switchGuideRegion('foreign')">国外选型建议</button>
+        </div>
+      </div>
+      
+      <div id="guide-domestic" class="guide-container">
+        <h2>国产大模型详细选型解读</h2>
+        
+            <details>
+                <summary>编程怎么选？</summary>
+                <div class="inside">算法、复杂逻辑和高性价比优先考虑 DeepSeek；大型项目、多文件修改和 Agent 工作流优先 GLM、Kimi、MiniMax；重视开源、CLI、API 与国内云平台完整性则优先 Qwen。</div>
+            </details>
+            
+            <details>
+                <summary>图片生成怎么选？</summary>
+                <div class="inside">中文海报、商业视觉和多图参考优先 Seedream；文字准确、结构化设计优先 Qwen-Image；商品、人像一致性和阿里工作流优先 Wan Image；电影感角色图和视频衔接可选可灵 Image。</div>
+            </details>
+            
+            <details>
+                <summary>视频生成怎么选？</summary>
+                <div class="inside">复杂多镜头、音画联合和导演式控制优先 Seedance；写实人物、运镜和成熟产品体验优先可灵；开发者 API、开源生态与阿里体系优先 Wan；创意视频与语音生态联动可考虑海螺。</div>
+            </details>
+            
+            <details>
+                <summary>文本写作怎么选？</summary>
+                <div class="inside">把口述观点整理成脚本或文章优先 Kimi；综合中文写作优先 Qwen；短剧、故事和人物对白优先 MiniMax；抖音、小红书和生活化口语优先豆包；技术分析和商业报告优先 GLM；深度观点拆解优先 DeepSeek。</div>
+            </details>
+            
+            <details>
+                <summary>与 Claude 的差距在哪里？</summary>
+                <div class="inside">国产模型在中文互联网语境、生活化表达和本地知识上往往更接地气；Claude 的优势仍主要体现在语言克制、长文节奏、角色语气一致性、复杂改写和较低的“AI 模板味”。</div>
+            </details>
+            
+      </div>
+
+      <div id="guide-foreign" class="guide-container hidden">
+        <h2>国外大模型详细选型解读</h2>
+        
+            <details>
+                <summary>编程应该怎么选？</summary>
+                <div class="inside">追求综合代码能力和 Codex 工作流，优先 OpenAI；重视大型项目理解、规划、审查和代码质量，优先 Claude；需要超长上下文、Android、Google Cloud 或 Gemini CLI，优先 Gemini；希望更直接、速度快并尝试新型 Agent，可关注 Grok；企业私有化和开放部署可看 Nemotron、Mistral、Llama。</div>
+            </details>
+            
+            <details>
+                <summary>图片生成应该怎么选？</summary>
+                <div class="inside">日常综合生成和自然语言反复修改，优先 GPT Image；追求电影感和艺术审美，Midjourney 仍然很强；制作海报和图片文字，优先 Ideogram；品牌、矢量和设计物料，优先 Recraft；本地部署、LoRA 和高度可控，优先 FLUX 或 Stable Diffusion；Photoshop 工作流优先 Firefly。</div>
+            </details>
+            
+            <details>
+                <summary>视频生成应该怎么选？</summary>
+                <div class="inside">原生音画、写实和复杂镜头优先 Veo；专业控制、视频编辑和团队生产优先 Runway；ChatGPT 用户和叙事型画面可看 Sora；快速动态创意可选 Luma；Adobe 用户可直接进入 Firefly 与 Premiere 流程；需要开放权重和本地研究可看 LTX。</div>
+            </details>
+            
+            <details>
+                <summary>文本表达应该怎么选？</summary>
+                <div class="inside">长文、润色、脚本、小说、语气控制和减少“AI 味”，优先 Claude；复杂综合任务、分析和工具调用，优先 GPT；一次处理大量资料、网页、图片和长文档，优先 Gemini；偏互联网热点和直接观点表达，可选 Grok；欧洲语言、企业私有化和多语言需求可看 Mistral。</div>
+            </details>
+            
+            <details>
+                <summary>为什么产品榜和纯跑分榜不完全一样？</summary>
+                <div class="inside">纯跑分主要测模型在固定任务中的表现；真正使用还受 App、CLI、IDE、编辑器、上下文管理、生成速度、价格、地区开放情况和工作流影响。因此本页把基准能力与产品成熟度合并考虑。</div>
+            </details>
+            
+      </div>
+    </div>
+
+    <footer class="footer">
+      AI 大模型全景控制台报告 · 适合大模型选型、价格比对和策划决策 · 更新数据保留完整来源链接以便人工校验
+    </footer>
+  </main>
+
+  <script>
+    // Tab switching logic
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.section-view').forEach(view => view.classList.remove('active'));
+      
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
+    // Leaderboard region switching
+    function switchRegion(regionId) {
+      document.querySelectorAll('#tab-leaderboard .region-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('#tab-leaderboard .region-btn')).find(btn => btn.getAttribute('onclick').includes(regionId));
+      if (activeBtn) activeBtn.classList.add('active');
+      
+      if (regionId === 'domestic') {
+        document.getElementById('leaderboard-domestic').classList.remove('hidden');
+        document.getElementById('leaderboard-foreign').classList.add('hidden');
+      } else {
+        document.getElementById('leaderboard-domestic').classList.add('hidden');
+        document.getElementById('leaderboard-foreign').classList.remove('hidden');
+      }
+    }
+
+    // Guide region switching
+    function switchGuideRegion(regionId) {
+      document.querySelectorAll('#tab-guide .region-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('#tab-guide .region-btn')).find(btn => btn.getAttribute('onclick').includes(regionId));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (regionId === 'domestic') {
+        document.getElementById('guide-domestic').classList.remove('hidden');
+        document.getElementById('guide-foreign').classList.add('hidden');
+      } else {
+        document.getElementById('guide-domestic').classList.add('hidden');
+        document.getElementById('guide-foreign').classList.remove('hidden');
+      }
+    }
+
+    // Ranking category filter buttons
+    function filterRankCards(cat, btn) {
+      const filterGroup = btn.parentElement;
+      filterGroup.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.category-card');
+      cards.forEach(card => {
+        if (cat === 'all') {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.toggle('hidden', !card.classList.contains(cat));
+        }
+      });
+    }
+
+    // Database search filter
+    function searchDatabase() {
+      const query = document.getElementById('search-db').value.toLowerCase().strip();
+      const rows = document.querySelectorAll('#db-table tbody tr');
+      let matchedCount = 0;
+      
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(query)) {
+          row.classList.remove('hidden');
+          matchedCount++;
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+      
+      document.getElementById('results-lbl').textContent = '匹配到 ' + matchedCount + ' 个大模型信息';
+    }
+
+    // JavaScript helper string trim
+    String.prototype.strip = function() {
+      return this.replace(/^\s+|\s+$/g, '');
+    };
+  </script>
+</body>
+</html>

@@ -17,7 +17,9 @@
           "multimodal": "是",
           "features": "通用推理、代码、文本、图像和语音等能力；以官方模型页为准。",
           "api_price_note": "见 OpenAI API pricing",
-          "subscription_price_note": "见 ChatGPT pricing"
+          "subscription_price_note": "见 ChatGPT pricing",
+          "cli_agent_support": "支持：官方 openai CLI；支持接入 VS Code GitHub Copilot、Cursor、Cline 等 Agent 编程工具",
+          "plugin_support": "支持：ChatGPT 插件生态、Custom GPTs 以及 API function calling/tools 接口"
         }
       ]
     },
@@ -39,7 +41,9 @@
           "multimodal": "是",
           "features": "强调长上下文、复杂推理、代码和企业安全能力。",
           "api_price_note": "见 Anthropic pricing",
-          "subscription_price_note": "见 Claude plans"
+          "subscription_price_note": "见 Claude plans",
+          "cli_agent_support": "支持：官方 Claude Code 终端命令行编程 Agent 交互工具；广泛支持 Cursor、Cline、Roo Code 等工具",
+          "plugin_support": "支持：Model Context Protocol (MCP) 协议扩展、Claude 智能体以及 API 工具调用接口"
         }
       ]
     },
@@ -61,7 +65,9 @@
           "multimodal": "是",
           "features": "原生多模态，覆盖文本、图像、音频、视频和长上下文场景。",
           "api_price_note": "见 Gemini API pricing",
-          "subscription_price_note": "见 Google AI plans"
+          "subscription_price_note": "见 Google AI plans",
+          "cli_agent_support": "支持：官方 gemini-cli，以及 Google IDX、Gemini Code Assist 开发环境；可接入 Cursor、Cline 等终端",
+          "plugin_support": "支持：Google Workspace（邮箱、文档、云端硬盘）扩展、Gemini MCP Server 及 function calling 接口"
         }
       ]
     },
@@ -82,7 +88,9 @@
           "multimodal": "部分型号支持",
           "features": "开放权重生态，常用于私有化部署和二次微调。",
           "api_price_note": "模型权重通常不按 API 收费，托管平台另计",
-          "subscription_price_note": "无统一官方订阅价"
+          "subscription_price_note": "无统一官方订阅价",
+          "cli_agent_support": "支持：官方 Llama CLI 及 llamafile 工具，支持接入各类开源本地 Coding Agent 框架",
+          "plugin_support": "支持：Llama Stack 智能体开发套件、Llama Agentic System 以及 function calling 接口"
         }
       ]
     },
@@ -103,7 +111,9 @@
           "multimodal": "部分型号支持",
           "features": "欧洲 AI 厂商，覆盖开放模型、企业模型和推理模型。",
           "api_price_note": "见 Mistral platform pricing",
-          "subscription_price_note": "以官方产品页为准"
+          "subscription_price_note": "以官方产品页为准",
+          "cli_agent_support": "支持：官方 mistral CLI 命令行客户端，支持接入主流开源 Coding Agent 平台",
+          "plugin_support": "支持：Le Chat 插件工具箱、La Plateforme 智能体构建工具及 function calling 接口"
         }
       ]
     },
@@ -124,12 +134,14 @@
           "multimodal": "部分型号支持",
           "features": "强调实时信息、推理和 X 生态接入。",
           "api_price_note": "见 xAI API pricing",
-          "subscription_price_note": "见 Grok/X subscription 页面"
+          "subscription_price_note": "见 Grok/X subscription 页面",
+          "cli_agent_support": "支持：Grok Build 开发环境，支持 API 接入第三方终端或 Coding Agent 工具",
+          "plugin_support": "支持：X 社交平台实时数据插件、Grok 网页搜索与代码运行工具、API tools 接口"
         }
       ]
     },
     {
-      "name": "DeepSeek",
+      "name": "深度求索",
       "official_url": "https://chat.deepseek.com",
       "sources": [
         "https://chat.deepseek.com",
@@ -148,12 +160,12 @@
       ],
       "models": [
         {
-          "name": "DeepSeek 4",
+          "name": "DeepSeek",
           "openness": "开源与闭源服务并存",
           "multimodal": "以官方模型页为准",
-          "features": "按用户指定跟踪 DeepSeek 4；强调高性价比推理、代码和通用对话能力，版本细节需以官方 release note 复核。",
-          "cli_agent_support": "未确认官方独立 CLI；支持 API 调用，可接入第三方 CLI/Agent 软件",
-          "plugin_support": "支持 API tool/function calling 能力；官方插件生态需继续复核",
+          "features": "强调高性价比推理、代码和通用对话能力；开源权重与官方 API/网页服务并存，版本细节需以官方 release note 复核。",
+          "cli_agent_support": "无官方独立 CLI；官方提供 API，可接入 Claude Code、Cline、OpenCode 等第三方 CLI/Agent",
+          "plugin_support": "支持：官方 API 提供 tool/function calling（含 thinking 模式工具调用与 strict 模式）",
           "web_app": "https://chat.deepseek.com",
           "license_note": "开源仓库和闭源服务并存，具体许可证按模型仓库逐项复核",
           "weights_url": "https://github.com/deepseek-ai",
@@ -164,7 +176,7 @@
       ]
     },
     {
-      "name": "Alibaba Cloud",
+      "name": "阿里云",
       "official_url": "https://chat.qwen.ai",
       "sources": [
         "https://chat.qwen.ai",
@@ -188,12 +200,12 @@
       ],
       "models": [
         {
-          "name": "Qwen 3.7 / 通义千问",
+          "name": "通义千问 / Qwen",
           "openness": "开源与闭源服务并存",
           "multimodal": "部分型号支持",
-          "features": "按用户指定跟踪 Qwen 3.7；覆盖文本、代码、视觉、音频、多模态和 Agent 场景，版本细节需以官方 release note 复核。",
-          "cli_agent_support": "支持：Qwen Code 是 QwenLM 官方组织下的终端 AI coding agent",
-          "plugin_support": "支持/部分支持：可通过 Qwen Code、百炼/Model Studio 工具链和 API 工具调用接入，具体插件需逐项复核",
+          "features": "覆盖文本、代码、视觉、音频、多模态和 Agent 场景；Qwen 系列开源权重与阿里云百炼/通义服务并存，版本细节需以官方 release note 复核。",
+          "cli_agent_support": "支持：官方 Qwen Code 终端 AI coding agent（QwenLM/qwen-code，开源）",
+          "plugin_support": "支持：Qwen Code 内置工具链、阿里云百炼/Model Studio 工具调用与 API function calling",
           "web_app": "https://chat.qwen.ai",
           "license_note": "开源与闭源服务并存，开源模型需按具体 Qwen 仓库 LICENSE 复核",
           "weights_url": "https://github.com/QwenLM",
@@ -204,13 +216,15 @@
       ]
     },
     {
-      "name": "Moonshot AI",
+      "name": "月之暗面",
       "official_url": "https://kimi.com",
       "sources": [
         "https://kimi.com",
+        "https://www.kimi.com/code",
         "https://www.kimi.com/help/getting-started/overview",
         "https://platform.moonshot.ai/",
-        "https://platform.moonshot.cn/docs/"
+        "https://platform.moonshot.cn/docs/",
+        "https://github.com/MoonshotAI/kimi-code"
       ],
       "pricing_sources": [
         "https://platform.moonshot.cn/docs/pricing/chat"
@@ -221,32 +235,38 @@
       "release_note_sources": [
         "https://www.kimi.com/help/getting-started/overview"
       ],
+      "cli_agent_sources": [
+        "https://www.kimi.com/code",
+        "https://github.com/MoonshotAI/kimi-code"
+      ],
       "plugin_sources": [
         "https://platform.moonshot.ai/docs/guide/use-formula-tool-in-chatapi"
       ],
       "models": [
         {
-          "name": "Kimi 2.6 / Moonshot",
-          "openness": "闭源",
+          "name": "Kimi",
+          "openness": "开源与闭源服务并存",
           "multimodal": "部分型号支持",
-          "features": "按用户指定跟踪 Kimi 2.6；强调长上下文、中文体验、办公阅读和 Agent 场景，版本细节需以官方 release note 复核。",
-          "cli_agent_support": "未确认官方独立 CLI；Kimi Code/Agent 能力需以 kimi.com 与 Moonshot 官方文档复核",
-          "plugin_support": "支持官方 tools：Moonshot API 文档列出 web-search、fetch、quickjs、code_runner、excel 等工具",
+          "features": "强调长上下文、中文体验、办公阅读和 Agent/Coding 场景；Kimi K2 等有开放权重，平台 API 与 Kimi 应用为闭源服务。",
+          "cli_agent_support": "支持：官方 Kimi Code CLI（MoonshotAI/kimi-code，终端 coding agent）",
+          "plugin_support": "支持：官方 API tools（web-search、fetch、quickjs、code_runner、excel 等）及 tool calling",
           "web_app": "https://kimi.com",
-          "license_note": "闭源服务，按 Moonshot/Kimi 服务条款使用",
-          "commercial_use_note": "商业使用需查看 Kimi/Moonshot 平台条款和 API 计费规则",
+          "license_note": "部分模型开放权重，平台服务按 Moonshot/Kimi 服务条款使用",
+          "commercial_use_note": "商业使用需查看具体模型许可证及 Kimi/Moonshot 平台条款和 API 计费规则",
           "api_price_note": "见 Moonshot platform pricing",
           "subscription_price_note": "以 Kimi 官方页面为准"
         }
       ]
     },
     {
-      "name": "Zhipu AI",
+      "name": "智谱AI",
       "official_url": "https://z.ai",
       "sources": [
         "https://z.ai",
+        "https://www.zhipuai.cn/",
         "https://docs.z.ai/guides/llm/glm-5.1",
-        "https://open.bigmodel.cn/dev/api/normal-model/glm-4"
+        "https://open.bigmodel.cn/dev/api/normal-model/glm-4",
+        "https://docs.bigmodel.cn/cn/coding-plan/tool/others"
       ],
       "pricing_sources": [
         "https://open.bigmodel.cn/pricing"
@@ -258,21 +278,22 @@
         "https://docs.z.ai/guides/llm/glm-5.1"
       ],
       "cli_agent_sources": [
-        "https://docs.z.ai/devpack/tool/others"
+        "https://docs.z.ai/devpack/tool/others",
+        "https://docs.bigmodel.cn/cn/coding-plan/tool/others"
       ],
       "plugin_sources": [
         "https://docs.z.ai/devpack/extension/usage-query-plugin"
       ],
       "models": [
         {
-          "name": "GLM 5.1 / Z.ai",
+          "name": "GLM",
           "openness": "开源与闭源服务并存",
           "multimodal": "部分型号支持",
-          "features": "按用户指定跟踪 GLM 5.1；覆盖通用对话、代码、视觉、视频理解和 Coding Agent 场景，版本细节需以官方文档复核。",
-          "cli_agent_support": "支持/部分支持：Z.ai 文档提供 Coding Agent Tool 接入协议，可用于 Claude Code、Cursor、Cline、Roo Code 等工具",
-          "plugin_support": "支持：Z.ai 文档提供 GLM Coding Plan usage query plugin 等扩展",
+          "features": "覆盖通用对话、代码、视觉、视频理解和 Coding Agent 场景；GLM 系列多款权重以 MIT 等协议开源，Z.ai/开放平台提供闭源 API 与 Coding Plan。",
+          "cli_agent_support": "支持：官方 Coding Agent 接入协议与 ZCode；可对接 Claude Code、Cursor、Cline、Roo Code、OpenCode 等终端/IDE 工具",
+          "plugin_support": "支持：GLM Coding Plan 扩展插件（如 usage query plugin）、MCP 集成及 API 工具调用",
           "web_app": "https://z.ai",
-          "license_note": "开源与闭源服务并存，需按具体 GLM 模型页面复核",
+          "license_note": "开源与闭源服务并存，需按具体 GLM 模型页面复核许可证",
           "commercial_use_note": "商业使用需查看 Z.ai/智谱开放平台条款和具体模型许可证",
           "api_price_note": "见 BigModel pricing",
           "subscription_price_note": "以智谱官方页面为准"
@@ -280,7 +301,7 @@
       ]
     },
     {
-      "name": "Baidu",
+      "name": "百度",
       "official_url": "https://yiyan.baidu.com",
       "sources": [
         "https://cloud.baidu.com/product/wenxinworkshop",
@@ -291,52 +312,64 @@
       ],
       "models": [
         {
-          "name": "ERNIE / 文心",
-          "openness": "闭源为主",
+          "name": "文心",
+          "openness": "开源与闭源服务并存",
           "multimodal": "部分型号支持",
-          "features": "百度生态模型，覆盖搜索、办公、企业智能体和多模态场景。",
+          "features": "百度生态模型，覆盖搜索、办公、企业智能体和多模态场景；文心一言/千帆为闭源服务，部分 ERNIE 权重已开放。",
           "api_price_note": "见百度智能云千帆计费文档",
-          "subscription_price_note": "以文心一言/百度官方页面为准"
+          "subscription_price_note": "以文心一言/百度官方页面为准",
+          "cli_agent_support": "支持：百度智能云千帆 SDK 提供 qianfan CLI；可通过 API 接入主流 Agent/编辑器，无独立文心 Coding CLI",
+          "plugin_support": "支持：千帆 AppBuilder、文心一言插件生态（百度搜索、文档助手等）以及 API 工具调用"
         }
       ]
     },
     {
-      "name": "ByteDance",
+      "name": "字节跳动",
       "official_url": "https://www.doubao.com",
       "sources": [
-        "https://www.volcengine.com/product/doubao"
+        "https://www.volcengine.com/product/doubao",
+        "https://www.volcengine.com/product/ark"
       ],
       "pricing_sources": [
         "https://www.volcengine.com/pricing?product=doubao"
       ],
+      "cli_agent_sources": [
+        "https://www.volcengine.com/product/ark"
+      ],
       "models": [
         {
-          "name": "Doubao / 豆包",
+          "name": "豆包",
           "openness": "闭源",
           "multimodal": "部分型号支持",
-          "features": "覆盖文本、视觉、语音、视频和企业智能应用。",
+          "features": "覆盖文本、视觉、语音、视频和企业智能应用；以火山引擎/豆包闭源服务为主。",
           "api_price_note": "见火山引擎豆包计费页面",
-          "subscription_price_note": "以豆包官方页面为准"
+          "subscription_price_note": "以豆包官方页面为准",
+          "cli_agent_support": "支持：火山方舟官方 ark-cli（npm @volcengine/ark-cli），可对接 Claude Code、Cursor、TRAE 等",
+          "plugin_support": "支持：扣子 Coze 智能体开发生态、火山方舟工具调用以及 API tools 接口"
         }
       ]
     },
     {
-      "name": "Tencent Cloud",
+      "name": "腾讯",
       "official_url": "https://yuanbao.tencent.com",
       "sources": [
-        "https://cloud.tencent.com/product/hunyuan"
+        "https://cloud.tencent.com/product/hunyuan",
+        "https://hunyuan.tencent.com/",
+        "https://github.com/Tencent-Hunyuan"
       ],
       "pricing_sources": [
         "https://cloud.tencent.com/product/hunyuan/pricing"
       ],
       "models": [
         {
-          "name": "Hunyuan / 混元",
+          "name": "混元",
           "openness": "开源与闭源服务并存",
           "multimodal": "部分型号支持",
-          "features": "覆盖文本、图像、视频、3D 和企业应用场景。",
+          "features": "覆盖文本、图像、视频、3D 和企业应用场景；混元 Large/A13B/文生图/视频等部分权重已开源，元宝与腾讯云 API 为闭源服务。",
           "api_price_note": "见腾讯云混元计费页面",
-          "subscription_price_note": "以腾讯元宝/腾讯云官方页面为准"
+          "subscription_price_note": "以腾讯元宝/腾讯云官方页面为准",
+          "cli_agent_support": "部分支持：腾讯云官方 tccli 可调用混元 API；无独立混元 Coding CLI，可接入第三方 Agent/编辑器",
+          "plugin_support": "支持：腾讯元器智能体开发平台、混元插件（搜索、计算、图表等）及 API tools 接口"
         }
       ]
     },
@@ -369,15 +402,15 @@
       ],
       "models": [
         {
-          "name": "Minimax M3",
-          "openness": "闭源",
+          "name": "MiniMax",
+          "openness": "开源与闭源服务并存",
           "multimodal": "部分型号支持",
-          "features": "按用户指定跟踪 Minimax M3；覆盖文本、语音、视频、多媒体生成和 Agent 场景，版本细节需以官方 release note 复核。",
-          "cli_agent_support": "支持：MiniMax 官方文档提供 mmx-cli，GitHub MiniMax-AI/cli 标注为官方 CLI",
-          "plugin_support": "支持：官方文档覆盖 OpenClaw、MCP/Agent 集成和 MiniMax Agent 用户指南",
+          "features": "覆盖文本、语音、视频、多媒体生成和 Agent 场景；MiniMax-M1 等模型已开源，平台 API 与 Agent 服务为闭源。",
+          "cli_agent_support": "支持：官方 mmx-cli（GitHub MiniMax-AI/cli，npm mmx-cli）",
+          "plugin_support": "支持：OpenClaw、MCP/Agent 集成、MiniMax Agent 以及官方 CLI Skill 工具链",
           "web_app": "https://chat.minimax.io",
-          "license_note": "闭源服务，按 MiniMax 平台条款使用",
-          "commercial_use_note": "商业使用需查看 MiniMax 平台条款和 API 计费规则",
+          "license_note": "部分模型开源，平台服务按 MiniMax 条款使用",
+          "commercial_use_note": "商业使用需查看具体模型许可证及 MiniMax 平台条款和 API 计费规则",
           "api_price_note": "见 MiniMax platform pricing",
           "subscription_price_note": "以 MiniMax 官方页面为准"
         }
@@ -399,7 +432,367 @@
           "multimodal": "以官方模型页为准",
           "features": "面向企业检索增强、嵌入、重排和生成式 AI 工作流。",
           "api_price_note": "见 Cohere pricing",
-          "subscription_price_note": "以 Cohere pricing 为准"
+          "subscription_price_note": "以 Cohere pricing 为准",
+          "cli_agent_support": "支持：官方 cohere CLI 工具，支持检索增强（RAG）和企业级开发终端集成",
+          "plugin_support": "支持：Cohere Toolkit 智能体套件、企业级 RAG 检索连接器生态及 function calling"
+        }
+      ]
+    },
+    {
+      "name": "快手",
+      "official_url": "https://klingai.com",
+      "sources": [
+        "https://klingai.com",
+        "https://klingai.kuaishou.com/"
+      ],
+      "pricing_sources": [
+        "https://klingai.com"
+      ],
+      "models": [
+        {
+          "name": "可灵",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "快手旗下可灵 Image 与可灵 Video；视频生成、电影级画面与角色连续创作能力。",
+          "api_price_note": "见可灵官方定价",
+          "subscription_price_note": "包月包年套餐见官方页面",
+          "cli_agent_support": "不支持官方独立 CLI；提供官方可灵 API，可作为第三方 Agent/工作流接口",
+          "plugin_support": "支持：可灵 Web 端灵感画布、动作控制等创作工具，以及 API 视频/图像生成控参接口"
+        }
+      ]
+    },
+    {
+      "name": "生数科技",
+      "official_url": "https://www.vidu.studio",
+      "sources": [
+        "https://www.vidu.studio",
+        "https://www.vidu.com/"
+      ],
+      "models": [
+        {
+          "name": "Vidu",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "生数科技视频生成模型；支持主体一致性、动漫和特效生成。",
+          "api_price_note": "见 Vidu 官方定价",
+          "subscription_price_note": "订阅详情见官网",
+          "cli_agent_support": "不支持官方独立 CLI；提供官方 Vidu API，可作为第三方 Agent/工作流接口",
+          "plugin_support": "支持：Vidu Web 端角色/主体一致性等创意工具、API 视频生成工具链"
+        }
+      ]
+    },
+    {
+      "name": "小米",
+      "official_url": "https://mimo.xiaomi.com",
+      "sources": [
+        "https://mimo.xiaomi.com",
+        "https://mimo.xiaomi.com/zh",
+        "https://github.com/XiaomiMiMo",
+        "https://mimo.xiaomi.com/zh/blog/mimo-code-long-horizon"
+      ],
+      "cli_agent_sources": [
+        "https://mimo.xiaomi.com/zh/mimocode",
+        "https://mimo.xiaomi.com/zh/blog/mimo-code-long-horizon"
+      ],
+      "models": [
+        {
+          "name": "MiMo",
+          "openness": "开源与闭源服务并存",
+          "multimodal": "是",
+          "features": "小米通用智能基座；覆盖推理、编程、多模态与端侧场景。MiMo-7B、MiMo-V2-Flash、MiMo-V2.5 等权重已开源（MIT），部分 Pro/Omni 以 API 闭源提供。",
+          "api_price_note": "见小米 MiMo 开放平台/官网说明",
+          "subscription_price_note": "以官方公布为准",
+          "cli_agent_support": "支持：官方 MiMo Code 终端编程 Agent（npm @mimo-ai/cli，MIT 开源）",
+          "plugin_support": "支持：MiMo Code 内置工具与持久记忆、官方 API 接入及端侧/Agent 自动化能力",
+          "web_app": "https://mimo.xiaomi.com",
+          "license_note": "部分模型 MIT 开源，部分型号为闭源 API 服务",
+          "weights_url": "https://github.com/XiaomiMiMo",
+          "commercial_use_note": "开源型号按 MIT 等许可证；闭源服务需查看小米 MiMo 平台条款"
+        }
+      ]
+    },
+    {
+      "name": "NVIDIA",
+      "official_url": "https://build.nvidia.com",
+      "sources": [
+        "https://build.nvidia.com"
+      ],
+      "models": [
+        {
+          "name": "Nemotron / Cosmos",
+          "openness": "开源/开放权重",
+          "multimodal": "部分型号支持",
+          "features": "NVIDIA 针对企业级、代码和端侧优化的大模型，支持 NIM 容器部署。",
+          "api_price_note": "NVIDIA Build 提供免费调用额度，企业托管另计",
+          "subscription_price_note": "无个人订阅套餐",
+          "cli_agent_support": "支持：官方 NVIDIA NIM CLI 部署；可作为 API 接入 Cursor、Cline 等 IDE 编程 Agent",
+          "plugin_support": "支持：TensorRT-LLM 优化插件、以及与 LangChain 等主流智能体框架的深度集成"
+        }
+      ]
+    },
+    {
+      "name": "Amazon",
+      "official_url": "https://aws.amazon.com/bedrock/nova/",
+      "pricing_sources": [
+        "https://aws.amazon.com/bedrock/pricing/"
+      ],
+      "models": [
+        {
+          "name": "Nova",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "Amazon Bedrock 旗舰多模态模型系列，强于 AWS 生态集成与低成本推理。",
+          "api_price_note": "见 AWS Bedrock 计费页",
+          "subscription_price_note": "按 AWS 服务计费",
+          "cli_agent_support": "支持：官方 AWS CLI；可作为 API 接入 Bedrock IDE 插件及 Cline 等 Agent 编程框架",
+          "plugin_support": "支持：AWS Bedrock Agents 智能体套件，集成 RAG 检索知识库与 API function calling"
+        }
+      ]
+    },
+    {
+      "name": "Microsoft",
+      "official_url": "https://azure.microsoft.com",
+      "sources": [
+        "https://azure.microsoft.com/products/cognitive-services/openai-service"
+      ],
+      "models": [
+        {
+          "name": "Phi / MAI-Image",
+          "openness": "开源/闭源并存",
+          "multimodal": "部分型号支持",
+          "features": "Phi 为微软端侧高能小模型；MAI-Image 为 Copilot 商业设计出图底层。",
+          "api_price_note": "Phi 开源免费下载；商业 API 见 Azure 定价",
+          "subscription_price_note": "包含于 Copilot Pro 订阅中",
+          "cli_agent_support": "支持：通过 Microsoft AI Shell、Ollama CLI 运行 Phi 系列；可接入 VS Code GitHub Copilot",
+          "plugin_support": "支持：Phi 支持 ONNX Runtime 插件、Semantic Kernel 框架；MAI-Image 集成于 Copilot Designer"
+        }
+      ]
+    },
+    {
+      "name": "Midjourney",
+      "official_url": "https://www.midjourney.com",
+      "pricing_sources": [
+        "https://www.midjourney.com"
+      ],
+      "models": [
+        {
+          "name": "Midjourney",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "殿堂级 AI 绘画工具；艺术审美、电影感和角色连续创作的绝对标杆。",
+          "api_price_note": "不提供直接公有 API 计费，主要面向订阅用户",
+          "subscription_price_note": "月度订阅套餐约 $10 - $120/月",
+          "cli_agent_support": "支持：无官方 CLI；支持 Discord Bot/斜杠命令交互，支持接入各类第三方 Discord 智能体",
+          "plugin_support": "支持：Discord 内置编辑工具（Vary Region、Pan、Zoom）和官方 Web 端的图像编辑器插件"
+        }
+      ]
+    },
+    {
+      "name": "Recraft",
+      "official_url": "https://www.recraft.ai",
+      "pricing_sources": [
+        "https://www.recraft.ai/pricing"
+      ],
+      "models": [
+        {
+          "name": "Recraft V4",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "设计工具级出图模型，支持矢量图生成、海报与商业物料定制。",
+          "api_price_note": "见 Recraft API pricing",
+          "subscription_price_note": "支持个人与团队订阅",
+          "cli_agent_support": "支持：提供官方 API，无独立命令行 CLI 工具",
+          "plugin_support": "支持：Web 端支持无限画布（Infinite Canvas）、矢量编辑工具箱和图片背景擦除/修复插件"
+        }
+      ]
+    },
+    {
+      "name": "Black Forest Labs",
+      "official_url": "https://blackforestlabs.ai",
+      "sources": [
+        "https://blackforestlabs.ai"
+      ],
+      "models": [
+        {
+          "name": "FLUX.2",
+          "openness": "开源与闭源并存",
+          "multimodal": "是",
+          "features": "最流行的开源图像模型之一；超写实人像、文字排版与高指令遵循。",
+          "api_price_note": "开源版本免费下载；商业版接口按第三方平台计费",
+          "subscription_price_note": "开源无需订阅",
+          "cli_agent_support": "支持：通过 ComfyUI、Automatic1111 命令行及 Python 脚本运行；可接入各类 AI 绘画客户端",
+          "plugin_support": "支持：丰富的 LoRA 插件、ControlNet 插件以精准控制构图、人像和光影"
+        }
+      ]
+    },
+    {
+      "name": "Ideogram",
+      "official_url": "https://ideogram.ai",
+      "pricing_sources": [
+        "https://ideogram.ai/pricing"
+      ],
+      "models": [
+        {
+          "name": "Ideogram 4",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "主打精准的海报艺术字体设计、Logo 以及排版出图。",
+          "api_price_note": "见 Ideogram 官方 API 说明",
+          "subscription_price_note": "个人订阅见官方定价",
+          "cli_agent_support": "支持：提供官方 API，暂无官方命令行 CLI 工具",
+          "plugin_support": "支持：Web 端支持文字排版调优工具（Magic Prompt）、图片编辑插件与画板比例调整"
+        }
+      ]
+    },
+    {
+      "name": "Adobe",
+      "official_url": "https://firefly.adobe.com",
+      "sources": [
+        "https://firefly.adobe.com"
+      ],
+      "models": [
+        {
+          "name": "Firefly / Firefly Video",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "Adobe 官方创意生成模型；内置于 Photoshop、Premiere，主打商业版权安全。",
+          "api_price_note": "集成于 Adobe 订阅中，或按生成额度计费",
+          "subscription_price_note": "包含在 Adobe Creative Cloud 中",
+          "cli_agent_support": "支持：无独立 CLI 工具；可作为底层出图引擎集成于各类企业自动化流",
+          "plugin_support": "支持：深度集成于 Photoshop（生成式填充/绘图插件）、Illustrator（生成式矢量绘图）等专业创意套件"
+        }
+      ]
+    },
+    {
+      "name": "Stability AI",
+      "official_url": "https://stability.ai",
+      "sources": [
+        "https://stability.ai"
+      ],
+      "models": [
+        {
+          "name": "Stable Diffusion",
+          "openness": "开源与闭源并存",
+          "multimodal": "是",
+          "features": "经典的开源图像生成模型，本地部署、LoRA 控制与社区生态极其庞大。",
+          "api_price_note": "开源版本免费下载；官方 API 收费见官网",
+          "subscription_price_note": "非商业使用免费",
+          "cli_agent_support": "支持：支持 WebUI CLI、ComfyUI 终端运行；广泛作为 API 或本地模型被各类编程/出图客户端集成",
+          "plugin_support": "支持：全球最庞大的社区插件生态，包括 ControlNet、IP-Adapter、LoRA、以及各类精细渲染插件"
+        }
+      ]
+    },
+    {
+      "name": "Runway",
+      "official_url": "https://runwayml.com",
+      "pricing_sources": [
+        "https://runwayml.com/pricing"
+      ],
+      "models": [
+        {
+          "name": "Runway Gen-4.5",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "老牌视频生成平台，多镜头控制、视频编辑与工作流整合第一门槛。",
+          "api_price_note": "见 Runway API 价格",
+          "subscription_price_note": "月度订阅套餐，包含额度",
+          "cli_agent_support": "支持：官方提供 API 控制接口，无独立命令行 CLI 编程工具",
+          "plugin_support": "支持：Web 端提供 Runway AI Magic Tools 工具箱（如画笔控制 Motion Brush、高级相机控制、绿幕抠图等）"
+        }
+      ]
+    },
+    {
+      "name": "Luma AI",
+      "official_url": "https://lumalabs.ai",
+      "pricing_sources": [
+        "https://lumalabs.ai/dream-machine/pricing"
+      ],
+      "models": [
+        {
+          "name": "Luma Ray 3 / Dream Machine",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "电影级动态视频生成模型，动作控制和快节奏创意迭代极强。",
+          "api_price_note": "见 Luma API pricing",
+          "subscription_price_note": "有免费测试额度，收费订阅见官网",
+          "cli_agent_support": "支持：提供 Dream Machine API，无独立 CLI 命令行终端",
+          "plugin_support": "支持: Web 端支持首尾帧参考、动作路径绘制工具和视频长镜头生成插件"
+        }
+      ]
+    },
+    {
+      "name": "Lightricks",
+      "official_url": "https://lightricks.com",
+      "sources": [
+        "https://lightricks.com"
+      ],
+      "models": [
+        {
+          "name": "LTX 2.3",
+          "openness": "开源/开放权重",
+          "multimodal": "是",
+          "features": "开放权重的视频与音频联合生成模型，支持本地部署与开发。",
+          "api_price_note": "开源免费下载",
+          "subscription_price_note": "无统一订阅套餐",
+          "cli_agent_support": "支持：支持 Python 脚本与 ComfyUI 终端运行，可作为开源 API 接入各类视频生成客户端",
+          "plugin_support": "支持：支持原生音画同步生成插件、以及开源社区的各类视频连续性调优工具"
+        }
+      ]
+    },
+    {
+      "name": "Pika",
+      "official_url": "https://pika.art",
+      "pricing_sources": [
+        "https://pika.art/pricing"
+      ],
+      "models": [
+        {
+          "name": "Pika",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "短视频特效、快速社交媒体视频生成与动画制作。",
+          "api_price_note": "以官方公告为准",
+          "subscription_price_note": "按月包年订阅套餐",
+          "cli_agent_support": "支持：支持官方 Discord Bot 斜杠命令，暂无官方独立 CLI 命令行终端",
+          "plugin_support": "支持：Web 端支持局部修改（Modify Region）、画面扩展（Expand Canvas）及 Pika 剪辑工具箱"
+        }
+      ]
+    },
+    {
+      "name": "Perplexity",
+      "official_url": "https://www.perplexity.ai",
+      "pricing_sources": [
+        "https://www.perplexity.ai"
+      ],
+      "models": [
+        {
+          "name": "Perplexity",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "AI 搜索整合平台，自动搜索多方源头并附加来源链接进行长文总结。",
+          "api_price_note": "提供 Perplexity API，按调用收费",
+          "subscription_price_note": "Perplexity Pro 约 $20/月",
+          "cli_agent_support": "支持：提供官方 API，可接入各类终端检索客户端或命令行 Agent 作为搜索数据源",
+          "plugin_support": "支持：支持 Perplexity Copilot 深度搜索插件、以及各类浏览器的搜索引擎整合工具"
+        }
+      ]
+    },
+    {
+      "name": "Reve",
+      "official_url": "https://reve.ai",
+      "sources": [
+        "https://reve.ai"
+      ],
+      "models": [
+        {
+          "name": "Reve 2.0",
+          "openness": "闭源",
+          "multimodal": "是",
+          "features": "盲测偏好极高的国外图像生成模型，构图、写实效果卓越。",
+          "api_price_note": "见官网说明",
+          "subscription_price_note": "以官方公布为准",
+          "cli_agent_support": "支持：无官方 CLI，提供基础的 API 接口供第三方应用集成",
+          "plugin_support": "支持：Web 平台提供基础图像生成与参数调节滑块工具"
         }
       ]
     }
